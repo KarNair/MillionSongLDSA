@@ -27,6 +27,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""This code has been modified for python3 compatibility by Karthik Nair(28 May 2019) of Uppsala University (github.com/karnair)"""
+
 
 import tables
 

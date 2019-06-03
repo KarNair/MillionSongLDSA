@@ -1,4 +1,7 @@
 """
+
+Original:
+
 Alexis Greenstreet (October 4, 2015) University of Wisconsin-Madison
 
 This code is designed to convert the HDF5 files of the Million Song Dataset
@@ -36,6 +39,8 @@ def get_all_titles(basedir,ext='.h5') :
             h5.close()
     return titles
 """
+
+"""This code has been modified for python3 compatibility by Karthik Nair(28 May 2019) of Uppsala University (github.com/karnair)"""
 
 import sys
 import os
@@ -199,7 +204,7 @@ def main():
     for root, dirs, files in os.walk(basedir):        
         files = glob.glob(os.path.join(root,'*'+ext))
         for f in files:
-            print(f)
+            #print(f)
 
             songH5File = hdf5_getters.open_h5_file_read(f)
             song = Song(str(hdf5_getters.get_song_id(songH5File)))
@@ -290,7 +295,8 @@ def main():
             lastIndex = len(csvRowString)
             csvRowString = csvRowString[0:lastIndex-1]
             csvRowString += "\n"
-            outputFile1.write(csvRowString)
+            #outputFile1.write(csvRowString)
+            
             csvRowString = ""
 
             songH5File.close()
