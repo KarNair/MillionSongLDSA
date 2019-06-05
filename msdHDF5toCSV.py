@@ -1,31 +1,23 @@
 """
-
 Original:
-
 Alexis Greenstreet (October 4, 2015) University of Wisconsin-Madison
-
 This code is designed to convert the HDF5 files of the Million Song Dataset
 to a CSV by extracting various song properties.
-
 The script writes to a "SongCSV.csv" in the directory containing this script.
-
 Please note that in the current form, this code only extracts the following
 information from the HDF5 files:
 AlbumID, AlbumName, ArtistID, ArtistLatitude, ArtistLocation,
 ArtistLongitude, ArtistName, Danceability, Duration, KeySignature,
 KeySignatureConfidence, SongID, Tempo, TimeSignature,
 TimeSignatureConfidence, Title, and Year.
-
 This file also requires the use of "hdf5_getters.py", written by
 Thierry Bertin-Mahieux (2010) at Columbia University
-
 Credit:
 This HDF5 to CSV code makes use of the following example code provided
 at the Million Song Dataset website 
 (Home>Tutorial/Iterate Over All Songs, 
 http://labrosa.ee.columbia.edu/millionsong/pages/iterate-over-all-songs),
 Which gives users the following code to get all song titles:
-
 import os
 import glob
 import hdf5_getters
@@ -196,15 +188,19 @@ def main():
 
     #Set the basedir here, the root directory from which the search
     #for files stored in a (hierarchical data structure) will originate
-    basedir = "/media/karthik/DATA/MillionSongSubset/data" # "." As the default means the current directory
+    #basedir = "/media/karthik/DATA/MillionSongSubset/data" # "." As the default means the current directory
+    basedir = "/opt/ldsa/MillionSongSubset/data/A/A/A" # "." As the default means the current directory
     ext = ".h5" #Set the extension here. H5 is the extension for HDF5 files.
+    #Set the default values for key parameters in input dataset if no value exist
+    perv_song_danceability = '1.0'
+    perv_song_energy = '1.0'
+    perv_song_songhotttnesss = '0.4908272592350795'
     #################################################
-
     #FOR LOOP
     for root, dirs, files in os.walk(basedir):        
         files = glob.glob(os.path.join(root,'*'+ext))
         for f in files:
-            #print(f)
+            print(f)
 
             songH5File = hdf5_getters.open_h5_file_read(f)
             song = Song(str(hdf5_getters.get_song_id(songH5File)))
@@ -221,8 +217,16 @@ def main():
             song.artistLongitude = str(hdf5_getters.get_artist_longitude(songH5File))
             song.artistName = str(hdf5_getters.get_artist_name(songH5File))
             song.danceability = str(hdf5_getters.get_danceability(songH5File))
+            if song.danceability == '0.0':
+                song.danceability = perv_song_danceability
+            #else:
+            #    perv_song_danceability = song.danceability
             song.duration = str(hdf5_getters.get_duration(songH5File))
             song.energy = str(hdf5_getters.get_energy(songH5File))
+            if song.energy == '0.0':
+                song.energy = perv_song_energy
+            #else:
+            #    perv_song_energy = song.energy
             # song.setGenreList()
             song.keySignature = str(hdf5_getters.get_key(songH5File))
             song.keySignatureConfidence = str(hdf5_getters.get_key_confidence(songH5File))
@@ -230,6 +234,11 @@ def main():
             # song.popularity = None
             song.tempo = str(hdf5_getters.get_tempo(songH5File))
             song.songhotttnesss = str(hdf5_getters.get_song_hotttnesss(songH5File))
+            print(song.songhotttnesss)
+            if song.songhotttnesss == 'nan' or song.songhotttnesss == '0.0':
+                song.songhotttnesss = perv_song_songhotttnesss
+            #else:
+            #    perv_song_songhotttnesss = song.songhotttnesss
             song.timeSignature = str(hdf5_getters.get_time_signature(songH5File))
             song.timeSignatureConfidence = str(hdf5_getters.get_time_signature_confidence(songH5File))
             song.title = str(hdf5_getters.get_title(songH5File))
@@ -295,7 +304,7 @@ def main():
             lastIndex = len(csvRowString)
             csvRowString = csvRowString[0:lastIndex-1]
             csvRowString += "\n"
-            #outputFile1.write(csvRowString)
+            outputFile1.write(csvRowString)
             
             csvRowString = ""
 
